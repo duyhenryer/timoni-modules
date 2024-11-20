@@ -1,0 +1,46 @@
+name: Release modules
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  modules:
+    runs-on: ubuntu-latest
+    # strategy:
+    #   matrix:
+    #     module-type:
+    #       - app-template
+    permissions:
+      packages: write
+    steps:
+      # Checkout the repository
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Setup Timoni
+      - name: Setup Timoni
+        uses: stefanprodan/timoni/actions/setup@main
+
+      # Lint the module
+      - name: Lint
+        run: |
+          timoni mod lint ./modules/${{ matrix.module-type }}
+
+      # Test instance build
+      - name: Test instance build
+        run: |
+          timoni build --namespace testing test ./modules/${{ matrix.module-type }}
+
+      # Push the modules to GitHub Container Registry
+      - name: Push modules
+        run: |
+          timoni mod push ./modules/${{ matrix.module-type }} \
+            oci://ghcr.io/${{ github.repository }}/${{ matrix.module-type }} \
+            --creds ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} \
+            --version '0.0.1' \
+            --latest \
+            --annotation 'org.opencontainers.image.source=https://github.com/${{ github.repository }}' \
+            --annotation 'org.opencontainers.image.licenses=Apache-2.0'
