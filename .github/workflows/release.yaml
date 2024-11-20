@@ -7,10 +7,10 @@ on:
 jobs:
   modules:
     runs-on: ubuntu-latest
-    # strategy:
-    #   matrix:
-    #     module-type:
-    #       - app-template
+    strategy:
+      matrix:
+        module-type:
+          - app-template
     permissions:
       packages: write
     steps:
