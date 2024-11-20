@@ -7,7 +7,7 @@ A [timoni.sh](http://timoni.sh) module for deploying app-template to Kubernetes 
 To create an instance using the default values:
 
 ```shell
-timoni -n default apply app-template oci://<container-registry-url>
+timoni -n default apply app-template oci://ghcr.io/duyhenryer/timoni-modules/app-template
 ```
 
 To change the [default configuration](#configuration),
@@ -27,7 +27,7 @@ values: {
 And apply the values with:
 
 ```shell
-timoni -n default apply app-template oci://<container-registry-url> \
+timoni -n default apply app-template oci://ghcr.io/duyhenryer/timoni-modules/app-template \
 --values ./my-values.cue
 ```
 
